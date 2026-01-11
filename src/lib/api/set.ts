@@ -227,3 +227,34 @@ export function useUSBNode1Mutation() {
     },
   });
 }
+
+export function useNetworkConfigMutation() {
+  const api = useAxiosWithAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["networkConfigMutation"],
+    mutationFn: async (variables: { 
+      enabled: boolean; 
+      mode: string; 
+      miimon?: number;
+      apply?: boolean;
+    }) => {
+      const response = await api.get<APIResponse<string>>("/bmc", {
+        params: {
+          opt: "set",
+          type: "network_config",
+          enabled: variables.enabled ? "1" : "0",
+          mode: variables.mode,
+          miimon: variables.miimon || 100,
+          apply: variables.apply ? "1" : "0",
+        },
+      });
+      return response.data.response[0].result;
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ["networkConfig"] });
+      void queryClient.invalidateQueries({ queryKey: ["infoTabData"] });
+    },
+  });
+}

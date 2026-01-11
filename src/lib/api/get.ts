@@ -226,3 +226,29 @@ export function useUSBNode1Query() {
     },
   });
 }
+
+// Network bonding configuration
+export interface NetworkConfigResponse {
+  bonding_enabled: boolean;
+  bonding_mode: string | null;
+  bonding_active: boolean;
+  slaves: string[];
+  miimon: number;
+}
+
+export function useNetworkConfigQuery() {
+  const api = useAxiosWithAuth();
+
+  return useSuspenseQuery({
+    queryKey: ["networkConfig"],
+    queryFn: async () => {
+      const response = await api.get<APIResponse<NetworkConfigResponse>>("/bmc", {
+        params: {
+          opt: "get",
+          type: "network_config",
+        },
+      });
+      return response.data.response[0].result;
+    },
+  });
+}

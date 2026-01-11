@@ -12,6 +12,7 @@ const navigationLinks = [
   { to: "/usb", label: "navigation.usb" },
   { to: "/firmware-upgrade", label: "navigation.firmwareUpgrade" },
   { to: "/flash-node", label: "navigation.flashNode" },
+  { to: "/network", label: "navigation.network" },
   { to: "/about", label: "navigation.about" },
 ] as const;
 
