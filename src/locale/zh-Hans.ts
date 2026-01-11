@@ -7,7 +7,8 @@ const translations = {
     usb: "USB",
     firmwareUpgrade: "固件升级",
     flashNode: "刷写节点",
-    about: "关于",
+    network: "Network",
+    about: "About",
   },
   userNav: {
     language: "语言",

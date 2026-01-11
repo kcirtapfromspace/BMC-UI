@@ -7,7 +7,8 @@ const translations = {
     usb: "USB",
     firmwareUpgrade: "Actualizar Firmware",
     flashNode: "Instalar SO",
-    about: "Acerca de",
+    network: "Network",
+    about: "About",
   },
   userNav: {
     language: "Lenguaje",

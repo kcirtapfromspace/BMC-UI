@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import TableItem from "@/components/TableItem";
 import TabView from "@/components/TabView";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -61,15 +60,15 @@ function Network() {
       setHasChanges(false);
       await refetch();
       toast({
-        title: apply ? "Network configuration applied" : "Network configuration saved",
+        title: apply ? t("network.configApplied") : t("network.configSaved"),
         description: apply 
-          ? "Network settings have been applied. Connection may be briefly interrupted."
-          : "Changes saved. Reboot to apply.",
+          ? t("network.applyDescription")
+          : t("network.saveDescription"),
       });
-    } catch (error) {
+    } catch {
       toast({
-        title: "Error",
-        description: "Failed to save network configuration",
+        title: t("common.error"),
+        description: t("network.saveFailed"),
         variant: "destructive",
       });
     }
@@ -79,29 +78,29 @@ function Network() {
     <TabView>
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium">Link Aggregation (Bonding)</h3>
+          <h3 className="text-lg font-medium">{t("network.linkAggregation")}</h3>
           <p className="text-sm text-muted-foreground">
-            Combine both Ethernet ports for increased bandwidth or failover.
+            {t("network.description")}
           </p>
         </div>
 
         <dl className="flex flex-col">
-          <TableItem term="Status">
+          <TableItem term={t("network.status")}>
             {data?.bonding_active ? (
-              <span className="text-green-600">Active</span>
+              <span className="text-green-600">{t("network.active")}</span>
             ) : (
-              <span className="text-gray-500">Inactive</span>
+              <span className="text-gray-500">{t("network.inactive")}</span>
             )}
           </TableItem>
           {data?.bonding_active && (
             <>
-              <TableItem term="Current Mode">
+              <TableItem term={t("network.currentMode")}>
                 {data?.bonding_mode ?? "Unknown"}
               </TableItem>
-              <TableItem term="Slave Interfaces">
+              <TableItem term={t("network.slaveInterfaces")}>
                 {data?.slaves?.join(", ") || "None"}
               </TableItem>
-              <TableItem term="MII Monitor Interval">
+              <TableItem term={t("network.miiMonitor")}>
                 {data?.miimon ?? 100}ms
               </TableItem>
             </>
@@ -111,13 +110,12 @@ function Network() {
         <div className="border-t pt-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="bonding-toggle">Enable Link Aggregation</Label>
+              <span className="text-sm font-medium">{t("network.enableBonding")}</span>
               <p className="text-sm text-muted-foreground">
-                Bond ge0 and ge1 into a single interface
+                {t("network.enableDescription")}
               </p>
             </div>
             <Switch
-              id="bonding-toggle"
               checked={bondingEnabled}
               onCheckedChange={handleEnableChange}
             />
@@ -125,10 +123,10 @@ function Network() {
 
           {bondingEnabled && (
             <div className="space-y-2">
-              <Label htmlFor="bonding-mode">Bonding Mode</Label>
+              <span className="text-sm font-medium">{t("network.bondingMode")}</span>
               <Select value={bondingMode} onValueChange={handleModeChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select mode" />
+                <SelectTrigger label="Bonding Mode">
+                  <SelectValue placeholder={t("network.selectMode")} />
                 </SelectTrigger>
                 <SelectContent>
                   {BONDING_MODES.map((mode) => (
@@ -148,21 +146,22 @@ function Network() {
             <Button
               onClick={() => handleSave(false)}
               disabled={!hasChanges || mutation.isPending}
-              variant="outline"
+              variant="bw"
             >
-              Save (Apply on Reboot)
+              {t("network.saveReboot")}
             </Button>
             <Button
               onClick={() => handleSave(true)}
               disabled={!hasChanges || mutation.isPending}
+              variant="turing-green"
             >
-              Save & Apply Now
+              {t("network.saveApply")}
             </Button>
           </div>
           
           {hasChanges && (
             <p className="text-sm text-amber-600">
-              You have unsaved changes.
+              {t("network.unsavedChanges")}
             </p>
           )}
         </div>
