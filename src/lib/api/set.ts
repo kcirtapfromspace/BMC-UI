@@ -241,15 +241,16 @@ export function useNetworkConfigMutation() {
   return useMutation({
     mutationKey: ["networkConfigMutation"],
     mutationFn: async (variables: NetworkConfigPayload) => {
-      const response = await api.get<{ success: boolean }>("/api", {
+      const response = await api.get<APIResponse<string>>("/bmc", {
         params: {
-          cmd: "network_config",
+          opt: "set",
+          type: "network_config",
           enabled: variables.enabled ? "1" : "0",
           mode: variables.mode,
           apply: variables.apply ? "1" : "0",
         },
       });
-      return response.data;
+      return response.data.response[0].result;
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["networkConfig"] });

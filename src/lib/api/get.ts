@@ -241,12 +241,13 @@ export function useNetworkConfigQuery() {
   return useSuspenseQuery({
     queryKey: ["networkConfig"],
     queryFn: async () => {
-      const response = await api.get<NetworkConfigResponse>("/api", {
+      const response = await api.get<APIResponse<NetworkConfigResponse>>("/bmc", {
         params: {
-          cmd: "network_config",
+          opt: "get",
+          type: "network_config",
         },
       });
-      return response.data;
+      return response.data.response[0].result;
     },
   });
 }
