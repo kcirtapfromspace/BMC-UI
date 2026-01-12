@@ -91,7 +91,7 @@ function Network() {
           <div className="space-y-2">
             <div className="font-semibold">{t("network.mode")}</div>
             <Select value={mode} onValueChange={setMode} disabled={!enabled}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full" label={t("network.mode")}>
                 <SelectValue placeholder={t("ui.selectPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
