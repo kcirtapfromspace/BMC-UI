@@ -227,3 +227,33 @@ export function useUSBNode1Mutation() {
     },
   });
 }
+
+export interface NetworkConfigPayload {
+  enabled: boolean;
+  mode: string;
+  apply?: boolean;
+}
+
+export function useNetworkConfigMutation() {
+  const api = useAxiosWithAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["networkConfigMutation"],
+    mutationFn: async (variables: NetworkConfigPayload) => {
+      const response = await api.get<{ success: boolean }>("/api", {
+        params: {
+          cmd: "network_config",
+          enabled: variables.enabled ? "1" : "0",
+          mode: variables.mode,
+          apply: variables.apply ? "1" : "0",
+        },
+      });
+      return response.data;
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ["networkConfig"] });
+      void queryClient.invalidateQueries({ queryKey: ["infoTabData"] });
+    },
+  });
+}
